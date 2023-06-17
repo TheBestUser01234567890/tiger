@@ -23,31 +23,6 @@
 #include "brave/components/speedreader/speedreader_service.h"
 #endif
 
-namespace {
-class TestRewardsServiceObserver
-    : public brave_rewards::RewardsServiceObserver {
- public:
-  void WaitForServiceInitialized(brave_rewards::RewardsService* service) {
-    if (service->IsInitialized()) {
-      return;
-    }
-
-    observer_.Observe(service);
-    run_loop_.Run();
-  }
-
- private:
-  void OnRewardsInitialized(brave_rewards::RewardsService*) override {
-    run_loop_.Quit();
-  }
-
-  base::RunLoop run_loop_;
-  base::ScopedObservation<brave_rewards::RewardsService,
-                          brave_rewards::RewardsServiceObserver>
-      observer_{this};
-};
-}  // namespace
-
 class BraveSpeedFeatureProcessorBrowserTest : public InProcessBrowserTest {
  protected:
   void SetUpCommandLine(base::CommandLine* command_line) override {
